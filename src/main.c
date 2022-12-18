@@ -58,43 +58,28 @@ int victory_sr;
 
 void endGame();
 
+void duchCollisionMatch(OBJECT *duchObject)
+{
+    if (abs(getCamPosWorld().vx - duchObject->pos.vx) < 200 && abs(getCamPosWorld().vz - duchObject->pos.vz) < 400)
+    {
+        duchObject->pos = putawayPos;
+        ghostCount++;
+
+        if (ghostCount != 5)
+        {
+            play_sample(yay_addr, yay_sr);
+        }
+    }
+}
+
 void duchCollision()
 {
-    if (abs(getCamPosWorld().vx - duch0.pos.vx) < 200 && abs(getCamPosWorld().vz - duch0.pos.vz) < 400)
-    {
-        duch0.pos = putawayPos;
-        ghostCount++;
-        if (ghostCount != 5)
-            play_sample(yay_addr, yay_sr);
-    }
-    if (abs(getCamPosWorld().vx - duch1.pos.vx) < 200 && abs(getCamPosWorld().vz - duch1.pos.vz) < 400)
-    {
-        duch1.pos = putawayPos;
-        ghostCount++;
-        if (ghostCount != 5)
-            play_sample(yay_addr, yay_sr);
-    }
-    if (abs(getCamPosWorld().vx - duch2.pos.vx) < 200 && abs(getCamPosWorld().vz - duch2.pos.vz) < 400)
-    {
-        duch2.pos = putawayPos;
-        ghostCount++;
-        if (ghostCount != 5)
-            play_sample(yay_addr, yay_sr);
-    }
-    if (abs(getCamPosWorld().vx - duch3.pos.vx) < 200 && abs(getCamPosWorld().vz - duch3.pos.vz) < 400)
-    {
-        duch3.pos = putawayPos;
-        ghostCount++;
-        if (ghostCount != 5)
-            play_sample(yay_addr, yay_sr);
-    }
-    if (abs(getCamPosWorld().vx - duch4.pos.vx) < 200 && abs(getCamPosWorld().vz - duch4.pos.vz) < 400)
-    {
-        duch4.pos = putawayPos;
-        ghostCount++;
-        if (ghostCount != 5)
-            play_sample(yay_addr, yay_sr);
-    }
+    duchCollisionMatch(&duch0);
+    duchCollisionMatch(&duch1);
+    duchCollisionMatch(&duch2);
+    duchCollisionMatch(&duch3);
+    duchCollisionMatch(&duch4);
+
     if (ghostCount == 5)
     {
         endGame();
