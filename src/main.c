@@ -28,6 +28,7 @@ extern const uint32_t yay[];
 extern const uint32_t victory[];
 
 int ghostCount = 0;
+const int ghostCountMax = 5;
 
 OBJECT mazeO;
 
@@ -65,7 +66,7 @@ void duchCollisionMatch(OBJECT *duchObject)
         duchObject->pos = putawayPos;
         ghostCount++;
 
-        if (ghostCount != 5)
+        if (ghostCount < ghostCountMax)
         {
             play_sample(yay_addr, yay_sr);
         }
@@ -80,7 +81,7 @@ void duchCollision()
     duchCollisionMatch(&duch3);
     duchCollisionMatch(&duch4);
 
-    if (ghostCount == 5)
+    if (ghostCount == ghostCountMax)
     {
         endGame();
     }
@@ -195,7 +196,7 @@ void gameLoop()
 
     duchCollision();
 
-    FntPrint(-1, "            Ghosts found: %d/5\n", ghostCount);
+    FntPrint(-1, "            Ghosts found: %d/%d\n", ghostCount, ghostCountMax);
 
     sortObject(&duch0);
     sortObject(&duch1);
