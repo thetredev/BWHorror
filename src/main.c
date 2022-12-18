@@ -80,11 +80,6 @@ void duchCollision()
     duchCollisionMatch(&duch2);
     duchCollisionMatch(&duch3);
     duchCollisionMatch(&duch4);
-
-    if (ghostCount == ghostCountMax)
-    {
-        endGame();
-    }
 }
 
 void endGame()
@@ -215,9 +210,12 @@ int main(int argc, const char *argv[])
     initInput();
     gameInit();
     setGameLoopCallback(&gameLoop);
-    while (true)
+
+    while (ghostCount < ghostCountMax)
     {
         deltaTime = display(0);
         pollInput(deltaTime);
     }
+
+    endGame();
 }
