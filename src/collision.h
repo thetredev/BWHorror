@@ -1,3 +1,4 @@
+#pragma once
 #include <psxgte.h>
 #include "display.h"
 
