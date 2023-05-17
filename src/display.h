@@ -28,10 +28,10 @@ typedef struct {
 } MESH;
 
 typedef struct {
-    VECTOR pos;
-    SVECTOR rot;
-    MESH mesh;
-    TEXTURE texture;
+    VECTOR *pos;
+    SVECTOR *rot;
+    MESH *mesh;
+    TEXTURE *texture;
 } OBJECT;
 
 void setGameLoopCallback(void (*ptr)());

@@ -1,4 +1,4 @@
-/* 
+/*
     This entire thing is written terribly.
     There is a lot of unnecesssary data copying.
     Too bad.
@@ -61,9 +61,9 @@ void endGame();
 
 void duchCollisionMatch(OBJECT *duchObject)
 {
-    if (abs(getCamPosWorld().vx - duchObject->pos.vx) < 200 && abs(getCamPosWorld().vz - duchObject->pos.vz) < 400)
+    if (abs(getCamPosWorld().vx - duchObject->pos->vx) < 200 && abs(getCamPosWorld().vz - duchObject->pos->vz) < 400)
     {
-        duchObject->pos = putawayPos;
+        duchObject->pos = &putawayPos;
         ghostCount++;
 
         if (ghostCount < ghostCountMax)
@@ -80,6 +80,20 @@ void duchCollision()
     duchCollisionMatch(&duch2);
     duchCollisionMatch(&duch3);
     duchCollisionMatch(&duch4);
+}
+
+void initDuch(OBJECT *duch)
+{
+    duch->texture = malloc(sizeof(TEXTURE));
+}
+
+void resetDuchPos()
+{
+    duch0.pos = &duch0Pos;
+    duch1.pos = &duch1Pos;
+    duch2.pos = &duch2Pos;
+    duch3.pos = &duch3Pos;
+    duch4.pos = &duch4Pos;
 }
 
 void endGame()
@@ -101,23 +115,26 @@ void endGame()
     setCamPos(camPos);
     setCamRot(camRot);
 
-    duch0.pos = duch0Pos;
-    duch1.pos = duch1Pos;
-    duch2.pos = duch2Pos;
-    duch3.pos = duch3Pos;
-    duch4.pos = duch4Pos;
+    resetDuchPos();
 }
 
 void gameInit()
 {
-    duch0.texture.texture_size = 64;
+    initDuch(&mazeO);
+    initDuch(&duch0);
+    initDuch(&duch1);
+    initDuch(&duch2);
+    initDuch(&duch3);
+    initDuch(&duch4);
 
-    fillMesh_maze(&mazeO.mesh);
-    loadTexture(maze_tex, &mazeO.texture);
-    mazeO.texture.texture_size = 128;
+    duch0.texture->texture_size = 64;
 
-    loadTexture(duch, &duch0.texture);
-    fillMesh_duch(&duch0.mesh);
+    fillMesh_maze(mazeO.mesh);
+    loadTexture(maze_tex, mazeO.texture);
+    mazeO.texture->texture_size = 128;
+
+    loadTexture(duch, duch0.texture);
+    fillMesh_duch(duch0.mesh);
 
     duch1.mesh = duch0.mesh;
     duch1.texture = duch0.texture;
@@ -128,11 +145,7 @@ void gameInit()
     duch4.mesh = duch0.mesh;
     duch4.texture = duch0.texture;
 
-    duch0.pos = duch0Pos;
-    duch1.pos = duch1Pos;
-    duch2.pos = duch2Pos;
-    duch3.pos = duch3Pos;
-    duch4.pos = duch4Pos;
+    resetDuchPos();
 
     VAG_Header *steps_vag = (VAG_Header *)steps;
     steps_addr = upload_sample(&steps_vag[1], SWAP_ENDIAN(steps_vag->size));

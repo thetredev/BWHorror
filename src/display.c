@@ -72,7 +72,7 @@ void initDisplay(void)
 		gte_SetGeomOffset(CENTERX, CENTERY_PAL);
 	}
 	gte_SetGeomScreen(CENTERX);
-	
+
 	/*
 		// Setup DB 0
 		SetDefDispEnv(&db[0].disp, 0, 0, SCREEN_XRES, SCREEN_YRES);
@@ -158,8 +158,8 @@ void sortObject(OBJECT *obj)
 	VECTOR v_dir;
 	SVECTOR v_nrm;
 
-	RotMatrix(&obj->rot, &omtx);
-	TransMatrix(&omtx, &obj->pos);
+	RotMatrix(obj->rot, &omtx);
+	TransMatrix(&omtx, obj->pos);
 
 	CompMatrixLV(&mtx, &omtx, &omtx);
 
@@ -169,20 +169,20 @@ void sortObject(OBJECT *obj)
 	gte_SetTransMatrix(&omtx);
 
 	pol4 = (QUAD *)db_nextpri;
-	for (i = 0; i < obj->mesh.faces_num; i++)
+	for (i = 0; i < obj->mesh->faces_num; i++)
 	{
 
-		if (abs(getCamPosWorld().vx - obj->pos.vx - obj->mesh.vertex_data[obj->mesh.vertex_indices[i].v0].vx) < 2000 &&
-			abs(getCamPosWorld().vz - obj->pos.vz - obj->mesh.vertex_data[obj->mesh.vertex_indices[i].v0].vz) < 2000)
+		if (abs(getCamPosWorld().vx - obj->pos->vx - obj->mesh->vertex_data[obj->mesh->vertex_indices[i].v0].vx) < 2000 &&
+			abs(getCamPosWorld().vz - obj->pos->vz - obj->mesh->vertex_data[obj->mesh->vertex_indices[i].v0].vz) < 2000)
 		{
 
-			v_dir.vx = l_point.vx - obj->pos.vx - obj->mesh.vertex_data[obj->mesh.vertex_indices[i].v2].vx;
-			v_dir.vy = l_point.vy - obj->pos.vy - obj->mesh.vertex_data[obj->mesh.vertex_indices[i].v2].vy;
-			v_dir.vz = l_point.vz - obj->pos.vz - obj->mesh.vertex_data[obj->mesh.vertex_indices[i].v2].vz;
+			v_dir.vx = l_point.vx - obj->pos->vx - obj->mesh->vertex_data[obj->mesh->vertex_indices[i].v2].vx;
+			v_dir.vy = l_point.vy - obj->pos->vy - obj->mesh->vertex_data[obj->mesh->vertex_indices[i].v2].vy;
+			v_dir.vz = l_point.vz - obj->pos->vz - obj->mesh->vertex_data[obj->mesh->vertex_indices[i].v2].vz;
 
-			gte_ldv3(&obj->mesh.vertex_data[obj->mesh.vertex_indices[i].v0],
-					 &obj->mesh.vertex_data[obj->mesh.vertex_indices[i].v1],
-					 &obj->mesh.vertex_data[obj->mesh.vertex_indices[i].v2]);
+			gte_ldv3(&obj->mesh->vertex_data[obj->mesh->vertex_indices[i].v0],
+					 &obj->mesh->vertex_data[obj->mesh->vertex_indices[i].v1],
+					 &obj->mesh->vertex_data[obj->mesh->vertex_indices[i].v2]);
 
 			// Perspective
 			gte_rtpt();
@@ -200,7 +200,7 @@ void sortObject(OBJECT *obj)
 			gte_stsxy3(&pol4->x0, &pol4->x1, &pol4->x2);
 
 			// Load last vertex
-			gte_ldv0(&obj->mesh.vertex_data[obj->mesh.vertex_indices[i].v3]);
+			gte_ldv0(&obj->mesh->vertex_data[obj->mesh->vertex_indices[i].v3]);
 			gte_rtps();
 
 			// Depth sort
@@ -215,11 +215,11 @@ void sortObject(OBJECT *obj)
 			setRGB0(pol4, 255, 255, 255);
 			gte_ldrgb(&pol4->r0);
 
-			gte_ldv0(&obj->mesh.normal_data[(obj->mesh.normal_indices[i]).v0]);
+			gte_ldv0(&obj->mesh->normal_data[(obj->mesh->normal_indices[i]).v0]);
 
-			v_dir.vx = l_point.vx - obj->pos.vx - obj->mesh.vertex_data[obj->mesh.vertex_indices[i].v0].vx;
-			v_dir.vy = l_point.vy - obj->pos.vy - obj->mesh.vertex_data[obj->mesh.vertex_indices[i].v0].vy;
-			v_dir.vz = l_point.vz - obj->pos.vz - obj->mesh.vertex_data[obj->mesh.vertex_indices[i].v0].vz;
+			v_dir.vx = l_point.vx - obj->pos->vx - obj->mesh->vertex_data[obj->mesh->vertex_indices[i].v0].vx;
+			v_dir.vy = l_point.vy - obj->pos->vy - obj->mesh->vertex_data[obj->mesh->vertex_indices[i].v0].vy;
+			v_dir.vz = l_point.vz - obj->pos->vz - obj->mesh->vertex_data[obj->mesh->vertex_indices[i].v0].vz;
 
 			intensity = 4096 * 4 - ((
 										(v_dir.vx * v_dir.vx) +
@@ -244,9 +244,9 @@ void sortObject(OBJECT *obj)
 
 			gte_nccs();
 			//////////////////////////////
-			v_dir.vx = l_point.vx - obj->pos.vx - obj->mesh.vertex_data[obj->mesh.vertex_indices[i].v1].vx;
-			v_dir.vy = l_point.vy - obj->pos.vy - obj->mesh.vertex_data[obj->mesh.vertex_indices[i].v1].vy;
-			v_dir.vz = l_point.vz - obj->pos.vz - obj->mesh.vertex_data[obj->mesh.vertex_indices[i].v1].vz;
+			v_dir.vx = l_point.vx - obj->pos->vx - obj->mesh->vertex_data[obj->mesh->vertex_indices[i].v1].vx;
+			v_dir.vy = l_point.vy - obj->pos->vy - obj->mesh->vertex_data[obj->mesh->vertex_indices[i].v1].vy;
+			v_dir.vz = l_point.vz - obj->pos->vz - obj->mesh->vertex_data[obj->mesh->vertex_indices[i].v1].vz;
 
 			intensity = 4096 * 4 - ((
 										(v_dir.vx * v_dir.vx) +
@@ -274,9 +274,9 @@ void sortObject(OBJECT *obj)
 
 			gte_nccs();
 			//////////////////////////////
-			v_dir.vx = l_point.vx - obj->pos.vx - obj->mesh.vertex_data[obj->mesh.vertex_indices[i].v2].vx;
-			v_dir.vy = l_point.vy - obj->pos.vy - obj->mesh.vertex_data[obj->mesh.vertex_indices[i].v2].vy;
-			v_dir.vz = l_point.vz - obj->pos.vz - obj->mesh.vertex_data[obj->mesh.vertex_indices[i].v2].vz;
+			v_dir.vx = l_point.vx - obj->pos->vx - obj->mesh->vertex_data[obj->mesh->vertex_indices[i].v2].vx;
+			v_dir.vy = l_point.vy - obj->pos->vy - obj->mesh->vertex_data[obj->mesh->vertex_indices[i].v2].vy;
+			v_dir.vz = l_point.vz - obj->pos->vz - obj->mesh->vertex_data[obj->mesh->vertex_indices[i].v2].vz;
 
 			intensity = 4096 * 4 - ((
 										(v_dir.vx * v_dir.vx) +
@@ -304,9 +304,9 @@ void sortObject(OBJECT *obj)
 
 			gte_nccs();
 			//////////////////////////////
-			v_dir.vx = l_point.vx - obj->pos.vx - obj->mesh.vertex_data[obj->mesh.vertex_indices[i].v3].vx;
-			v_dir.vy = l_point.vy - obj->pos.vy - obj->mesh.vertex_data[obj->mesh.vertex_indices[i].v3].vy;
-			v_dir.vz = l_point.vz - obj->pos.vz - obj->mesh.vertex_data[obj->mesh.vertex_indices[i].v3].vz;
+			v_dir.vx = l_point.vx - obj->pos->vx - obj->mesh->vertex_data[obj->mesh->vertex_indices[i].v3].vx;
+			v_dir.vy = l_point.vy - obj->pos->vy - obj->mesh->vertex_data[obj->mesh->vertex_indices[i].v3].vy;
+			v_dir.vz = l_point.vz - obj->pos->vz - obj->mesh->vertex_data[obj->mesh->vertex_indices[i].v3].vz;
 
 			intensity = 4096 * 4 - ((
 										(v_dir.vx * v_dir.vx) +
@@ -335,15 +335,15 @@ void sortObject(OBJECT *obj)
 			gte_nccs();
 
 			setUV4(pol4,
-				   obj->mesh.uv_data[obj->mesh.uv_indices[i].v0].vx, obj->texture.texture_size - 1 - obj->mesh.uv_data[obj->mesh.uv_indices[i].v0].vy,
-				   obj->mesh.uv_data[obj->mesh.uv_indices[i].v1].vx, obj->texture.texture_size - 1 - obj->mesh.uv_data[obj->mesh.uv_indices[i].v1].vy,
-				   obj->mesh.uv_data[obj->mesh.uv_indices[i].v2].vx, obj->texture.texture_size - 1 - obj->mesh.uv_data[obj->mesh.uv_indices[i].v2].vy,
-				   obj->mesh.uv_data[obj->mesh.uv_indices[i].v3].vx, obj->texture.texture_size - 1 - obj->mesh.uv_data[obj->mesh.uv_indices[i].v3].vy);
+				   obj->mesh->uv_data[obj->mesh->uv_indices[i].v0].vx, obj->texture->texture_size - 1 - obj->mesh->uv_data[obj->mesh->uv_indices[i].v0].vy,
+				   obj->mesh->uv_data[obj->mesh->uv_indices[i].v1].vx, obj->texture->texture_size - 1 - obj->mesh->uv_data[obj->mesh->uv_indices[i].v1].vy,
+				   obj->mesh->uv_data[obj->mesh->uv_indices[i].v2].vx, obj->texture->texture_size - 1 - obj->mesh->uv_data[obj->mesh->uv_indices[i].v2].vy,
+				   obj->mesh->uv_data[obj->mesh->uv_indices[i].v3].vx, obj->texture->texture_size - 1 - obj->mesh->uv_data[obj->mesh->uv_indices[i].v3].vy);
 
 			pol4->tpage =
-				getTPage(obj->texture.tim.mode, 0, obj->texture.tim.prect->x, obj->texture.tim.prect->y);
+				getTPage(obj->texture->tim.mode, 0, obj->texture->tim.prect->x, obj->texture->tim.prect->y);
 
-			setClut(pol4, obj->texture.tim.crect->x, obj->texture.tim.prect->y);
+			setClut(pol4, obj->texture->tim.crect->x, obj->texture->tim.prect->y);
 			gte_strgb(&pol4->r3);
 			setPolyGT4(pol4);
 			addPrim(&(db[db_active].ot)[p >> 2], pol4);
